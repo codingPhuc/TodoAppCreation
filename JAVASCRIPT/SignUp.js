@@ -1,10 +1,9 @@
 // support method
-function validate(signUpUserName, signUpPassword, confirmPassword) {
+function validate(signUpUserName, signUpPassword, confirmPassword, arrUser) {
   if (signUpPassword.value !== confirmPassword.value) {
     alert("incorrect reenter password");
     return false;
   }
-  let arrUser = JSON.parse(localStorage.getItem("user"));
   if (arrUser) {
     let existingUser = arrUser.find(
       (user) => user.name === signUpUserName.value
@@ -18,11 +17,11 @@ function validate(signUpUserName, signUpPassword, confirmPassword) {
 }
 // main method
 function signup() {
-  let arrUser = [];
+  let arrUser = JSON.parse(localStorage.getItem("user")) || [];
   signUpUserName = document.getElementById("username");
   signUpPassword = document.getElementById("password");
   confirmPassword = document.getElementById("confirmPassword");
-  if (validate(signUpUserName, signUpPassword, confirmPassword)) {
+  if (validate(signUpUserName, signUpPassword, confirmPassword, arrUser)) {
     user = {
       id: Date.now(),
       name: signUpUserName.value,
@@ -30,6 +29,7 @@ function signup() {
     };
     arrUser.push(user);
     localStorage.setItem("user", JSON.stringify(arrUser));
+    location.assign("../HTML/signIn.html");
   }
 }
 function redirectLogin() {
