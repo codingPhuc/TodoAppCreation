@@ -29,7 +29,7 @@ function checkStorage() {
     sessionStorage.getItem("rememberMe")
   );
   if (rememberMeLocalStorage || rememberMeSessionStorage) {
-    location.assign("../HTML/main.html");
+    location.assign("../html/main.html");
   }
 }
 // main method
@@ -43,11 +43,11 @@ function login() {
     arrUser.pop(user);
     arrUser.unshift(user);
     localStorage.setItem("user", JSON.stringify(arrUser));
-    location.assign("../HTML/main.html");
+    location.assign("../html/main.html");
   }
 }
 function redirectSignup() {
-  location.assign("../HTML/signUp.html");
+  location.assign("../html/signUp.html");
 }
 function redirectLogin() {}
 // event listener
@@ -56,6 +56,3 @@ document.getElementById("sign-in-button").addEventListener("click", login);
 document
   .getElementById("sign-up-button")
   .addEventListener("click", redirectSignup);
-// document
-//   .getElementById("sign-up-button")
-//   .addEventListener("click", checkStorage);

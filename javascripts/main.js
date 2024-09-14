@@ -1,7 +1,7 @@
 function displayTask() {
-  const todoInput = document.getElementById("id-todo-input");
-  const addButton = document.getElementById("id-add-button");
-  const todoList = document.getElementById("id-todo-list");
+  const todoInput = document.getElementById("todo-input");
+  const addButton = document.getElementById("add-button");
+  const todoList = document.getElementById("todo-list");
   const filterDropdown = document.querySelector(".filter");
   const cancelButton = document.querySelector(".cancel");
   const logoutButton = document.getElementById("logout-button");
@@ -17,6 +17,20 @@ function displayTask() {
     const tasks = todoList.querySelectorAll("span");
     const taskList = Array.from(tasks).map((taskSpan) => taskSpan.textContent);
     localStorage.setItem(user.id, JSON.stringify(taskList));
+  }
+
+  function handleAddButtonClick() {
+    const taskName = todoInput.value.trim();
+    if (taskName !== "") {
+      createTask(taskName);
+    } else if (taskName === "") {
+      alert("Please input task name before adding a task");
+    }
+    updateLocalStorage();
+  }
+
+  function handleCancelButtonClick() {
+    todoInput.value = "";
   }
   // main function
   loadTasksFromLocalStorage();
@@ -38,7 +52,7 @@ function displayTask() {
     deleteButton.textContent = "Delete";
     deleteButton.className = "delete";
 
-    editButton.addEventListener("click", function () {
+    function handleEditButtonClick() {
       const taskInput = document.createElement("input");
       taskInput.type = "text";
       taskInput.value = taskSpan.textContent;
@@ -49,23 +63,19 @@ function displayTask() {
       saveButton.textContent = "Save";
       taskDiv.replaceChild(saveButton, editButton);
 
-      saveButton.addEventListener("click", function () {
+      saveButton.addEventListener("click", function handleSaveButtonClick() {
         taskSpan.textContent = taskInput.value;
         taskDiv.replaceChild(taskSpan, taskInput);
         taskDiv.replaceChild(editButton, saveButton);
         updateLocalStorage();
       });
-    });
-
-    //Delete task
-    deleteButton.addEventListener("click", function () {
+    }
+    function handleDeleteButtonClick() {
       todoList.removeChild(taskDiv);
       filterTasks();
       updateLocalStorage();
-    });
-
-    //Checkbox task
-    checkbox.addEventListener("change", function () {
+    }
+    function handleCheckboxChange() {
       if (checkbox.checked) {
         taskDiv.classList.add("completed");
         todoList.appendChild(taskDiv);
@@ -74,7 +84,14 @@ function displayTask() {
       }
       filterTasks();
       updateLocalStorage();
-    });
+    }
+    editButton.addEventListener("click", handleEditButtonClick);
+
+    // Delete task
+    deleteButton.addEventListener("click", handleDeleteButtonClick);
+
+    // Checkbox task
+    checkbox.addEventListener("change", handleCheckboxChange);
 
     taskDiv.appendChild(checkbox);
     taskDiv.appendChild(taskSpan);
@@ -86,21 +103,10 @@ function displayTask() {
     filterTasks();
   }
 
-  addButton.addEventListener("click", function () {
-    const taskName = todoInput.value.trim();
-    if (taskName !== "") {
-      createTask(taskName);
-    } else if (taskName === "") {
-      alert("Please input task name before adding a task");
-    }
-    updateLocalStorage();
-  });
+  addButton.addEventListener("click", handleAddButtonClick);
 
   // Cancel-input
-  cancelButton.addEventListener("click", function () {
-    todoInput.value = "";
-  });
-
+  cancelButton.addEventListener("click", handleCancelButtonClick);
   // Filter task
   function filterTasks() {
     const filterValue = filterDropdown.value;
@@ -108,25 +114,22 @@ function displayTask() {
 
     tasks.forEach((task) => {
       const isCompleted = task.classList.contains("completed");
-
-      if (filterValue === "all") {
-        task.style.display = "flex";
-      } else if (filterValue === "done") {
-        task.style.display = isCompleted ? "flex" : "none";
-      } else if (filterValue === "undone") {
-        task.style.display = isCompleted ? "none" : "flex";
-      }
+      const displayStyles = {
+        all: "flex",
+        done: isCompleted ? "flex" : "none",
+        undone: isCompleted ? "none" : "flex",
+      };
+      task.style.display = displayStyles[filterValue] || "none";
     });
   }
   function logout() {
     localStorage.setItem("rememberMe", "false");
     sessionStorage.setItem("rememberMe", "false");
-    location.assign("../HTML/signIn.html");
+    location.assign("../html/signIn.html");
   }
 
   filterDropdown.addEventListener("change", filterTasks);
   logoutButton.addEventListener("click", logout);
-  // window.onload("DOMContentLoaded");
 }
 
 document.addEventListener("DOMContentLoaded", displayTask);
