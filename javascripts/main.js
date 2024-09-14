@@ -19,42 +19,6 @@ function displayTask() {
     localStorage.setItem(user.id, JSON.stringify(taskList));
   }
 
-  function handleEditButtonClick(taskDiv, taskSpan, editButton) {
-    const taskInput = document.createElement("input");
-    taskInput.type = "text";
-    taskInput.value = taskSpan.textContent;
-    taskDiv.replaceChild(taskInput, taskSpan);
-
-    // Create a save button
-    const saveButton = document.createElement("button");
-    saveButton.textContent = "Save";
-    taskDiv.replaceChild(saveButton, editButton);
-
-    saveButton.addEventListener("click", function handleSaveButtonClick() {
-      taskSpan.textContent = taskInput.value;
-      taskDiv.replaceChild(taskSpan, taskInput);
-      taskDiv.replaceChild(editButton, saveButton);
-      updateLocalStorage();
-    });
-  }
-
-  function handleDeleteButtonClick(taskDiv) {
-    todoList.removeChild(taskDiv);
-    filterTasks();
-    updateLocalStorage();
-  }
-
-  function handleCheckboxChange(taskDiv, checkbox) {
-    if (checkbox.checked) {
-      taskDiv.classList.add("completed");
-      todoList.appendChild(taskDiv);
-    } else {
-      taskDiv.classList.remove("completed");
-    }
-    filterTasks();
-    updateLocalStorage();
-  }
-
   function handleAddButtonClick() {
     const taskName = todoInput.value.trim();
     if (taskName !== "") {
@@ -88,18 +52,46 @@ function displayTask() {
     deleteButton.textContent = "Delete";
     deleteButton.className = "delete";
 
-    editButton.addEventListener("click", function () {
-      handleEditButtonClick(taskDiv, taskSpan, editButton);
-    });
+    function handleEditButtonClick() {
+      const taskInput = document.createElement("input");
+      taskInput.type = "text";
+      taskInput.value = taskSpan.textContent;
+      taskDiv.replaceChild(taskInput, taskSpan);
 
-    //Delete task
-    deleteButton.addEventListener("click", function () {
-      handleDeleteButtonClick(taskDiv);
-    });
-    //Checkbox task
-    checkbox.addEventListener("change", function () {
-      handleCheckboxChange(taskDiv, checkbox);
-    });
+      // Create a save button
+      const saveButton = document.createElement("button");
+      saveButton.textContent = "Save";
+      taskDiv.replaceChild(saveButton, editButton);
+
+      saveButton.addEventListener("click", function handleSaveButtonClick() {
+        taskSpan.textContent = taskInput.value;
+        taskDiv.replaceChild(taskSpan, taskInput);
+        taskDiv.replaceChild(editButton, saveButton);
+        updateLocalStorage();
+      });
+    }
+    function handleDeleteButtonClick() {
+      todoList.removeChild(taskDiv);
+      filterTasks();
+      updateLocalStorage();
+    }
+    function handleCheckboxChange() {
+      if (checkbox.checked) {
+        taskDiv.classList.add("completed");
+        todoList.appendChild(taskDiv);
+      } else {
+        taskDiv.classList.remove("completed");
+      }
+      filterTasks();
+      updateLocalStorage();
+    }
+    editButton.addEventListener("click", handleEditButtonClick);
+
+    // Delete task
+    deleteButton.addEventListener("click", handleDeleteButtonClick);
+
+    // Checkbox task
+    checkbox.addEventListener("change", handleCheckboxChange);
 
     taskDiv.appendChild(checkbox);
     taskDiv.appendChild(taskSpan);
