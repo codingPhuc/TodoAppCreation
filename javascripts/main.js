@@ -18,6 +18,56 @@ function displayTask() {
     const taskList = Array.from(tasks).map((taskSpan) => taskSpan.textContent);
     localStorage.setItem(user.id, JSON.stringify(taskList));
   }
+
+  function handleEditButtonClick(taskDiv, taskSpan, editButton) {
+    const taskInput = document.createElement("input");
+    taskInput.type = "text";
+    taskInput.value = taskSpan.textContent;
+    taskDiv.replaceChild(taskInput, taskSpan);
+
+    // Create a save button
+    const saveButton = document.createElement("button");
+    saveButton.textContent = "Save";
+    taskDiv.replaceChild(saveButton, editButton);
+
+    saveButton.addEventListener("click", function handleSaveButtonClick() {
+      taskSpan.textContent = taskInput.value;
+      taskDiv.replaceChild(taskSpan, taskInput);
+      taskDiv.replaceChild(editButton, saveButton);
+      updateLocalStorage();
+    });
+  }
+
+  function handleDeleteButtonClick(taskDiv) {
+    todoList.removeChild(taskDiv);
+    filterTasks();
+    updateLocalStorage();
+  }
+
+  function handleCheckboxChange(taskDiv, checkbox) {
+    if (checkbox.checked) {
+      taskDiv.classList.add("completed");
+      todoList.appendChild(taskDiv);
+    } else {
+      taskDiv.classList.remove("completed");
+    }
+    filterTasks();
+    updateLocalStorage();
+  }
+
+  function handleAddButtonClick() {
+    const taskName = todoInput.value.trim();
+    if (taskName !== "") {
+      createTask(taskName);
+    } else if (taskName === "") {
+      alert("Please input task name before adding a task");
+    }
+    updateLocalStorage();
+  }
+
+  function handleCancelButtonClick() {
+    todoInput.value = "";
+  }
   // main function
   loadTasksFromLocalStorage();
 
@@ -39,41 +89,16 @@ function displayTask() {
     deleteButton.className = "delete";
 
     editButton.addEventListener("click", function () {
-      const taskInput = document.createElement("input");
-      taskInput.type = "text";
-      taskInput.value = taskSpan.textContent;
-      taskDiv.replaceChild(taskInput, taskSpan);
-
-      // Create a save button
-      const saveButton = document.createElement("button");
-      saveButton.textContent = "Save";
-      taskDiv.replaceChild(saveButton, editButton);
-
-      saveButton.addEventListener("click", function () {
-        taskSpan.textContent = taskInput.value;
-        taskDiv.replaceChild(taskSpan, taskInput);
-        taskDiv.replaceChild(editButton, saveButton);
-        updateLocalStorage();
-      });
+      handleEditButtonClick(taskDiv, taskSpan, editButton);
     });
 
     //Delete task
     deleteButton.addEventListener("click", function () {
-      todoList.removeChild(taskDiv);
-      filterTasks();
-      updateLocalStorage();
+      handleDeleteButtonClick(taskDiv);
     });
-
     //Checkbox task
     checkbox.addEventListener("change", function () {
-      if (checkbox.checked) {
-        taskDiv.classList.add("completed");
-        todoList.appendChild(taskDiv);
-      } else {
-        taskDiv.classList.remove("completed");
-      }
-      filterTasks();
-      updateLocalStorage();
+      handleCheckboxChange(taskDiv, checkbox);
     });
 
     taskDiv.appendChild(checkbox);
@@ -86,21 +111,10 @@ function displayTask() {
     filterTasks();
   }
 
-  addButton.addEventListener("click", function () {
-    const taskName = todoInput.value.trim();
-    if (taskName !== "") {
-      createTask(taskName);
-    } else if (taskName === "") {
-      alert("Please input task name before adding a task");
-    }
-    updateLocalStorage();
-  });
+  addButton.addEventListener("click", handleAddButtonClick);
 
   // Cancel-input
-  cancelButton.addEventListener("click", function () {
-    todoInput.value = "";
-  });
-
+  cancelButton.addEventListener("click", handleCancelButtonClick);
   // Filter task
   function filterTasks() {
     const filterValue = filterDropdown.value;
