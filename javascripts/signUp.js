@@ -29,11 +29,11 @@ function signup() {
     };
     arrUser.push(user);
     localStorage.setItem("user", JSON.stringify(arrUser));
-    location.assign("../HTML/signIn.html");
+    location.assign("../html/signIn.html");
   }
 }
 function redirectLogin() {
-  location.assign("../HTML/signIn.html");
+  location.assign("../html/signIn.html");
 }
 
 // event listener

@@ -1,7 +1,7 @@
 function displayTask() {
-  const todoInput = document.getElementById("id-todo-input");
-  const addButton = document.getElementById("id-add-button");
-  const todoList = document.getElementById("id-todo-list");
+  const todoInput = document.getElementById("todo-input");
+  const addButton = document.getElementById("add-button");
+  const todoList = document.getElementById("todo-list");
   const filterDropdown = document.querySelector(".filter");
   const cancelButton = document.querySelector(".cancel");
   const logoutButton = document.getElementById("logout-button");
@@ -108,25 +108,22 @@ function displayTask() {
 
     tasks.forEach((task) => {
       const isCompleted = task.classList.contains("completed");
-
-      if (filterValue === "all") {
-        task.style.display = "flex";
-      } else if (filterValue === "done") {
-        task.style.display = isCompleted ? "flex" : "none";
-      } else if (filterValue === "undone") {
-        task.style.display = isCompleted ? "none" : "flex";
-      }
+      const displayStyles = {
+        all: "flex",
+        done: isCompleted ? "flex" : "none",
+        undone: isCompleted ? "none" : "flex",
+      };
+      task.style.display = displayStyles[filterValue] || "none";
     });
   }
   function logout() {
     localStorage.setItem("rememberMe", "false");
     sessionStorage.setItem("rememberMe", "false");
-    location.assign("../HTML/signIn.html");
+    location.assign("../html/signIn.html");
   }
 
   filterDropdown.addEventListener("change", filterTasks);
   logoutButton.addEventListener("click", logout);
-  // window.onload("DOMContentLoaded");
 }
 
 document.addEventListener("DOMContentLoaded", displayTask);
