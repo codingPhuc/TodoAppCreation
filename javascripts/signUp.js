@@ -15,6 +15,15 @@ function validate(signUpUserName, signUpPassword, confirmPassword, arrUser) {
   }
   return true;
 }
+function checkStorage() {
+  const rememberMeLocalStorage = JSON.parse(localStorage.getItem("rememberMe"));
+  const rememberMeSessionStorage = JSON.parse(
+    sessionStorage.getItem("rememberMe")
+  );
+  if (rememberMeLocalStorage || rememberMeSessionStorage) {
+    location.assign("../html/main.html");
+  }
+}
 // main method
 function signup() {
   let arrUser = JSON.parse(localStorage.getItem("user")) || [];
@@ -35,7 +44,7 @@ function signup() {
 function redirectLogin() {
   location.assign("../html/signIn.html");
 }
-
+window.addEventListener("load", checkStorage);
 // event listener
 document
   .getElementById("sign-in-redirect-button")

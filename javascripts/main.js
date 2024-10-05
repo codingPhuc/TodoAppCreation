@@ -1,4 +1,12 @@
 function displayTask() {
+  const rememberMeLocalStorage = JSON.parse(localStorage.getItem("rememberMe"));
+  const rememberMeSessionStorage = JSON.parse(
+    sessionStorage.getItem("rememberMe")
+  );
+  if (!rememberMeLocalStorage && !rememberMeSessionStorage) {
+    location.assign("../html/signIn.html");
+  }
+
   const todoInput = document.getElementById("todo-input");
   const addButton = document.getElementById("add-button");
   const todoList = document.getElementById("todo-list");
@@ -8,15 +16,19 @@ function displayTask() {
   const user = JSON.parse(localStorage.getItem("user"))[0];
   // support function
   function loadTasksFromLocalStorage() {
-    const tasks = JSON.parse(localStorage.getItem(user.id)) || [];
-    for (const task of tasks) {
-      createTask(task);
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    const filteredTasks = tasks.filter((task) => task.userId === user.id);
+    for (const task of filteredTasks) {
+      createTask(task.name);
     }
   }
   function updateLocalStorage() {
     const tasks = todoList.querySelectorAll("span");
-    const taskList = Array.from(tasks).map((taskSpan) => taskSpan.textContent);
-    localStorage.setItem(user.id, JSON.stringify(taskList));
+    const taskList = Array.from(tasks).map((taskSpan) => ({
+      name: taskSpan.textContent,
+      userId: user.id,
+    }));
+    localStorage.setItem("tasks", JSON.stringify(taskList));
   }
 
   function handleAddButtonClick() {

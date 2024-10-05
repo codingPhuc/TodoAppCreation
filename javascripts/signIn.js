@@ -49,7 +49,6 @@ function login() {
 function redirectSignup() {
   location.assign("../html/signUp.html");
 }
-function redirectLogin() {}
 // event listener
 window.addEventListener("load", checkStorage);
 document.getElementById("sign-in-button").addEventListener("click", login);
